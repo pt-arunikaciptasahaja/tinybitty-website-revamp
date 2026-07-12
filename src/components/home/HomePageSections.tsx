@@ -12,6 +12,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TrackedLink } from "@/components/home/TrackedLink";
 import { ProductImage } from "@/features/catalog/ProductImage";
 
+// Social media cards
 const socialComingSoonCards = [
   {
     title: "Customer moments",
