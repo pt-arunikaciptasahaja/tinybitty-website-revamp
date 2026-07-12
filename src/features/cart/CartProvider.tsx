@@ -33,22 +33,17 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [hasLoadedStoredCart, setHasLoadedStoredCart] = useState(false);
-
-  useEffect(() => {
-    const storedCart = parseStoredCart(window.localStorage.getItem(CART_STORAGE_KEY));
-    setItems(storedCart.items);
-    setHasLoadedStoredCart(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hasLoadedStoredCart) {
-      return;
+  const [items, setItems] = useState<CartItem[]>(() => {
+    if (typeof window === "undefined") {
+      return [];
     }
 
+    return parseStoredCart(window.localStorage.getItem(CART_STORAGE_KEY)).items;
+  });
+
+  useEffect(() => {
     window.localStorage.setItem(CART_STORAGE_KEY, serializeCart({ items }));
-  }, [hasLoadedStoredCart, items]);
+  }, [items]);
 
   const addItem = useCallback((item: CartItem) => {
     setItems((currentItems) => addCartItem(currentItems, item));
