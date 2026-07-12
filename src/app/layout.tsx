@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import "@/content";
 import { SiteShell } from "@/components/layout/SiteShell";
@@ -57,6 +58,7 @@ export default function RootLayout({
         <OrganizationJsonLd />
         <AnalyticsScripts />
         <Analytics />
+        <SpeedInsights />
         <SiteShell>{children}</SiteShell>
       </body>
     </html>
