@@ -15,6 +15,10 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`,
   },
   description: routeSeo.home.description,
+  icons: {
+    icon: siteConfig.logo.imageSrc,
+    apple: siteConfig.logo.imageSrc,
+  },
   alternates: {
     canonical: "/",
   },
