@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { products } from "@/content/products";
 import { Container } from "@/components/ui/Container";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { CatalogAnalytics } from "@/features/catalog/CatalogAnalytics";
 import { ProductGrid } from "@/features/catalog/ProductGrid";
 import {
@@ -23,14 +22,7 @@ export default function CookiesPage() {
         items={cookieProducts.map((product) => toAnalyticsItem(product))}
       />
       <Container className="py-12 sm:py-16">
-        <SectionHeader
-          eyebrow="Cookies"
-          title="Cookie catalogue"
-          description="Filters will be added only when the approved catalogue is large enough to justify them."
-        />
-        <div className="mt-8">
-          <ProductGrid products={cookieProducts} />
-        </div>
+        <ProductGrid products={cookieProducts} />
       </Container>
     </main>
   );

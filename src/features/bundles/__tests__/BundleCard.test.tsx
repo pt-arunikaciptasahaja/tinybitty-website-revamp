@@ -6,7 +6,7 @@ import { BundleCard } from "@/features/bundles/BundleCard";
 import { BundleGrid } from "@/features/bundles/BundleGrid";
 
 describe("BundleCard", () => {
-  it("renders bundle content and hides savings when prices are missing", () => {
+  it("renders approved bundle content and bundle savings", () => {
     const bundle = bundles[0];
 
     if (!bundle) {
@@ -15,9 +15,12 @@ describe("BundleCard", () => {
 
     render(<BundleCard bundle={bundle} products={products} />);
 
-    expect(screen.getByRole("heading", { name: "[OWNER_INPUT_REQUIRED]" })).toBeInTheDocument();
-    expect(screen.getByText(/Savings are hidden/i)).toBeInTheDocument();
-    expect(screen.getByText("Included products: [OWNER_INPUT_REQUIRED]")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Sweet Sharing Mini Bundle" })).toBeInTheDocument();
+    expect(screen.getByText(/Rp55.000/)).toBeInTheDocument();
+    expect(screen.getByText(/Save/)).toHaveTextContent("Save Rp5.000 (8%)");
+    expect(screen.getAllByText(/Golden Crunch/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Heavenly Bites/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Harvest Haven/i).length).toBeGreaterThan(0);
   });
 
   it("renders an empty grid state", () => {

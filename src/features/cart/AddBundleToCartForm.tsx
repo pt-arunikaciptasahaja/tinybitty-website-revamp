@@ -60,17 +60,35 @@ export function AddBundleToCartForm({ bundle }: AddBundleToCartFormProps) {
       </div>
       <label className="grid gap-2 text-sm font-semibold text-ink">
         Quantity
-        <input
-          className="min-h-11 rounded-md border border-line bg-surface px-3 text-base text-ink"
-          type="number"
-          min="1"
-          inputMode="numeric"
-          value={quantity}
-          disabled={!isAvailable}
-          onChange={(event) =>
-            setQuantity(Math.max(1, Number.parseInt(event.target.value, 10) || 1))
-          }
-        />
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className="flex h-11 w-11 items-center justify-center rounded-md border border-line bg-surface text-ink transition-colors duration-base ease-smooth hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+            disabled={!isAvailable || quantity <= 1}
+          >
+            -
+          </button>
+          <input
+            className="min-h-11 w-full rounded-md border border-line bg-surface px-3 text-center text-base text-ink"
+            type="number"
+            min="1"
+            inputMode="numeric"
+            value={quantity}
+            disabled={!isAvailable}
+            onChange={(event) =>
+              setQuantity(Math.max(1, Number.parseInt(event.target.value, 10) || 1))
+            }
+          />
+          <button
+            type="button"
+            className="flex h-11 w-11 items-center justify-center rounded-md border border-line bg-surface text-ink transition-colors duration-base ease-smooth hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={() => setQuantity(quantity + 1)}
+            disabled={!isAvailable}
+          >
+            +
+          </button>
+        </div>
       </label>
       <Button type="submit" disabled={!isAvailable}>
         Add bundle

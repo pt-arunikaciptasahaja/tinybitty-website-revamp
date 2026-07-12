@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Bundle, Product } from "@/content/schemas";
+import { bundles } from "@/content/bundles";
+import { products } from "@/content/products";
 import { PLACEHOLDER_NOTICE } from "@/content/schemas";
 import {
   getBundleAvailability,
@@ -45,6 +47,21 @@ describe("bundle utilities", () => {
       },
       canDisplaySavings: true,
     });
+  });
+
+  it("applies the approved IDR 5,000 discount to every Sweet Sharing Bundle size", () => {
+    expect(bundles).toHaveLength(4);
+
+    for (const bundle of bundles) {
+      const pricing = resolveBundlePricing(bundle, products);
+
+      expect(bundle.includedItems).toHaveLength(3);
+      expect(bundle.includedItems.some((item) => item.productId === "Desert-Crown")).toBe(false);
+      expect(pricing.sourceNormalPrice).toEqual(bundle.normalPrice);
+      expect(pricing.savings?.bundlePrice).toEqual(bundle.bundlePrice);
+      expect(pricing.savings?.savings).toEqual(money(5000));
+      expect(pricing.canDisplaySavings).toBe(true);
+    }
   });
 
   it("builds analytics items without undefined prices", () => {

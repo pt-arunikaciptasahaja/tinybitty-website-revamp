@@ -6,14 +6,11 @@ export type WhatsAppLineItem = {
   subtotal: number;
 };
 
-export type FulfillmentMethod = "delivery" | "pickup";
-
 export type WhatsAppCheckoutDetails = {
   customerName: string;
-  fulfillmentMethod: FulfillmentMethod;
-  area: string;
+  mobileNumber: string;
+  deliveryAddress: string;
   desiredDate: string;
-  timeWindow: string;
   notes?: string;
 };
 
@@ -22,13 +19,24 @@ export type WhatsAppMessageInput = {
   customer: WhatsAppCheckoutDetails;
   items: WhatsAppLineItem[];
   subtotal: number;
+  deliveryFee: number;
 };
 
 function formatRupiah(amount: number): string {
   return `Rp${amount.toLocaleString("id-ID")}`;
 }
 
+function formatCustomerField(value: string | undefined): string {
+  const formattedValue = (value ?? "")
+    .replace(/[\u0000-\u001F\u007F]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return formattedValue || "-";
+}
+
 export function buildWhatsAppMessage(input: WhatsAppMessageInput): string {
+  const total = input.subtotal + input.deliveryFee;
   const itemLines = input.items
     .map(
       (item, index) =>
@@ -40,20 +48,26 @@ export function buildWhatsAppMessage(input: WhatsAppMessageInput): string {
     "Halo Tiny Bitty, saya ingin memesan.",
     "",
     `Order ID: ${input.orderId}`,
-    `Nama: ${input.customer.customerName}`,
-    `Pilihan: ${input.customer.fulfillmentMethod === "delivery" ? "Delivery" : "Pickup"}`,
-    `Area: ${input.customer.area}`,
-    `Tanggal: ${input.customer.desiredDate}`,
-    `Waktu: ${input.customer.timeWindow}`,
+    `Nama: ${formatCustomerField(input.customer.customerName)}`,
+    `No. HP: ${formatCustomerField(input.customer.mobileNumber)}`,
+    "Metode: Delivery",
+    `Alamat: ${formatCustomerField(input.customer.deliveryAddress)}`,
+    `Tanggal: ${formatCustomerField(input.customer.desiredDate)}`,
     "",
     "Pesanan:",
     itemLines,
     "",
     `Subtotal: ${formatRupiah(input.subtotal)}`,
-    `Catatan: ${input.customer.notes || "-"}`,
+    `Delivery service: Flat delivery - ${formatRupiah(input.deliveryFee)}`,
+    `Total pembayaran: ${formatRupiah(total)}`,
     "",
-    "Saya paham stok, delivery fee, jadwal, dan pembayaran masih perlu konfirmasi dari Tiny Bitty.",
-    "Mohon konfirmasi detail pesanan ini. Terima kasih.",
+    "Pembayaran via bank transfer:",
+    "Luckyta Aryandini",
+    "A/C BCA 1281458294",
+    `Catatan: ${formatCustomerField(input.customer.notes)}`,
+    "",
+    "Saya siap melanjutkan pembayaran setelah Tiny Bitty mengonfirmasi stok dan jadwal pengiriman.",
+    "Mohon dibantu cek detail pesanan ini. Terima kasih.",
   ].join("\n");
 }
 

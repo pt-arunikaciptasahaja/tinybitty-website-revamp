@@ -5,12 +5,12 @@ import { generateMetadata as generateCookieMetadata } from "@/app/cookies/[slug]
 describe("route SEO metadata", () => {
   it("does not expose placeholder product SEO metadata", async () => {
     const metadata = await generateCookieMetadata({
-      params: Promise.resolve({ slug: "placeholder-cookie-product" }),
+      params: Promise.resolve({ slug: "golden-crunch" }),
     });
 
-    expect(metadata.title).toBe("Cookie Product Details");
+    expect(metadata.title).toBe("Golden Crunch | Tiny Bitty Cookies");
     expect(metadata.description).toBe(
-      "Review Tiny Bitty cookie product details and prepare a WhatsApp enquiry.",
+      "Discover Golden Crunch, a buttery cookie with sliced almonds, chocolate chips, and crisp cornflakes.",
     );
     expect(JSON.stringify(metadata)).not.toContain("[OWNER_INPUT_REQUIRED]");
     expect(JSON.stringify(metadata)).not.toContain("noindex");
@@ -18,12 +18,12 @@ describe("route SEO metadata", () => {
 
   it("does not expose placeholder bundle SEO metadata", async () => {
     const metadata = await generateBundleMetadata({
-      params: Promise.resolve({ slug: "placeholder-bundle" }),
+      params: Promise.resolve({ slug: "sweet-sharing-bundle" }),
     });
 
-    expect(metadata.title).toBe("Bundle Details");
+    expect(metadata.title).toBe("Sweet Sharing Mini Bundle | Tiny Bitty");
     expect(metadata.description).toBe(
-      "Review Tiny Bitty bundle details and prepare a WhatsApp enquiry.",
+      "Order a Mini 30gr Sweet Sharing Bundle with Tiny Bitty cookies for gifting or office treats.",
     );
     expect(JSON.stringify(metadata)).not.toContain("[OWNER_INPUT_REQUIRED]");
     expect(JSON.stringify(metadata)).not.toContain("noindex");

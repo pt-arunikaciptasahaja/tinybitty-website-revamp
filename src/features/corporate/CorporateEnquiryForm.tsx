@@ -1,18 +1,118 @@
 "use client";
 
-import { useActionState, useEffect, useMemo, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { siteConfig } from "@/content/site-config";
 import type { CorporatePackage } from "@/content/schemas";
 import { Button } from "@/components/ui/Button";
-import { initialCorporateEnquiryActionState } from "@/features/corporate/action-core";
-import { submitCorporateEnquiry } from "@/features/corporate/actions";
-import { buildCorporateWhatsAppMessage } from "@/features/corporate/corporate-enquiry";
+import {
+  buildCorporateWhatsAppMessage,
+  validateCorporateEnquiry,
+} from "@/features/corporate/corporate-enquiry";
 import { trackEvent } from "@/lib/analytics";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 type CorporateEnquiryFormProps = {
   packages: CorporatePackage[];
 };
+
+const mobileNumberMaxLength = 13;
+const estimatedQuantityMaxLength = 6;
+
+function formatMobileNumberInput(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, mobileNumberMaxLength);
+
+  if (!digits) {
+    return "";
+  }
+
+  if (digits === "0" || digits.startsWith("08")) {
+    return digits;
+  }
+
+  if (digits.startsWith("0")) {
+    return "0";
+  }
+
+  return "";
+}
+
+function formatEstimatedQuantityInput(value: string): string {
+  return value.replace(/\D/g, "").slice(0, estimatedQuantityMaxLength);
+}
+
+function formatDateInputValue(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function getDesiredDateMin(): string {
+  return formatDateInputValue(new Date());
+}
+
+function TextInput({
+  id,
+  label,
+  value,
+  onChange,
+  error,
+  placeholder,
+  inputMode,
+  autoComplete,
+  min,
+  max,
+  maxLength,
+  type = "text",
+  required = false,
+  name,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  error?: string | undefined;
+  placeholder?: string | undefined;
+  inputMode?: "text" | "search" | "email" | "tel" | "url" | "none" | "numeric" | "decimal";
+  autoComplete?: string | undefined;
+  min?: string | undefined;
+  max?: string | undefined;
+  maxLength?: number | undefined;
+  type?: string;
+  required?: boolean;
+  name?: string;
+}) {
+  const errorId = `${id}-error`;
+
+  return (
+    <div className="grid gap-2 text-sm font-semibold text-ink">
+      <label htmlFor={id}>{label}</label>
+      <input
+        id={id}
+        name={name}
+        className="min-h-11 rounded-md border border-line bg-surface px-3 text-base text-ink"
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        inputMode={inputMode}
+        autoComplete={autoComplete}
+        min={min}
+        max={max}
+        maxLength={maxLength}
+        required={required}
+        aria-invalid={error ? "true" : undefined}
+        aria-describedby={error ? errorId : undefined}
+        onChange={(event) => onChange(event.target.value)}
+      />
+      {error ? (
+        <span id={errorId} className="text-sm text-ink-muted">
+          {error}
+        </span>
+      ) : null}
+    </div>
+  );
+}
 
 type FormValues = {
   companyName: string;
@@ -39,86 +139,117 @@ const initialValues: FormValues = {
 };
 
 export function CorporateEnquiryForm({ packages }: CorporateEnquiryFormProps) {
-  const [state, formAction, isPending] = useActionState(
-    submitCorporateEnquiry,
-    initialCorporateEnquiryActionState,
-  );
   const [values, setValues] = useState(initialValues);
-  const whatsappUrl = useMemo(() => {
-    const message = buildCorporateWhatsAppMessage({
-      ...values,
-      estimatedQuantity: Number.parseInt(values.estimatedQuantity, 10) || 1,
-    });
+  const [fieldErrors, setFieldErrors] = useState<Partial<FormValues>>({});
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const desiredDateMin = getDesiredDateMin();
 
-    return buildWhatsAppUrl(siteConfig.whatsappNumber, message);
-  }, [values]);
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setFieldErrors({});
+    setErrorMessage(null);
 
-  useEffect(() => {
-    if (state.status !== "success") {
+    const validation = validateCorporateEnquiry({ ...values, website: "" });
+
+    if (!validation.success) {
+      setFieldErrors(validation.fieldErrors);
+      setErrorMessage(validation.formError);
       return;
     }
 
+    const selectedPackage = packages.find((packageTier) => packageTier.slug === values.packageSlug);
+
     trackEvent("corporate_enquiry", {
       source: "corporate_gifts_form",
+      items: [
+        {
+          item_id: values.packageSlug,
+          item_name: selectedPackage?.name || "",
+          item_category: "corporate_package",
+          quantity: validation.data.estimatedQuantity,
+        },
+      ],
     });
-  }, [state.status]);
+
+    const whatsappUrl = buildWhatsAppUrl(
+      siteConfig.whatsappNumber,
+      buildCorporateWhatsAppMessage(validation.data),
+    );
+
+    if (whatsappUrl) {
+      window.open(whatsappUrl, "_blank");
+    }
+    
+    setValues(initialValues);
+  }
 
   return (
-    <section className="rounded-lg border border-line bg-surface-raised p-5 shadow-soft">
+    <section className="max-w-2xl mx-auto rounded-lg border border-line bg-surface-raised p-5 shadow-soft">
       <h2 className="text-xl font-semibold text-ink">Request a quotation</h2>
       <p className="mt-2 text-sm leading-6 text-ink-muted">
         This form sends an enquiry only. MOQ, lead time, stock, delivery fee, schedule, and payment
         require confirmation.
       </p>
 
-      <form action={formAction} className="mt-5 grid gap-4">
+      <form onSubmit={handleSubmit} className="mt-5 grid gap-4" noValidate>
         <TextInput
+          id="corporate-company-name"
           label="Company name"
           name="companyName"
           value={values.companyName}
-          error={state.fieldErrors.companyName}
-          onChange={(value) => setValues((current) => ({ ...current, companyName: value }))}
+          error={fieldErrors.companyName}
+          onChange={(value: string) => setValues((current) => ({ ...current, companyName: value }))}
           required
         />
         <TextInput
+          id="corporate-contact-name"
           label="Contact name"
           name="contactName"
           value={values.contactName}
-          error={state.fieldErrors.contactName}
-          onChange={(value) => setValues((current) => ({ ...current, contactName: value }))}
+          error={fieldErrors.contactName}
+          onChange={(value: string) => setValues((current) => ({ ...current, contactName: value }))}
           required
         />
         <TextInput
+          id="corporate-email"
           label="Email"
           name="email"
           type="email"
+          autoComplete="email"
           value={values.email}
-          error={state.fieldErrors.email}
-          onChange={(value) => setValues((current) => ({ ...current, email: value }))}
+          error={fieldErrors.email}
+          onChange={(value: string) => setValues((current) => ({ ...current, email: value }))}
           required
         />
         <TextInput
+          id="corporate-phone-number"
           label="Phone or WhatsApp"
           name="phone"
+          type="tel"
+          inputMode="numeric"
+          autoComplete="tel"
           value={values.phone}
-          error={state.fieldErrors.phone}
-          onChange={(value) => setValues((current) => ({ ...current, phone: value }))}
+          error={fieldErrors.phone}
+          onChange={(value: string) =>
+            setValues((current) => ({
+              ...current,
+              phone: formatMobileNumberInput(value),
+            }))
+          }
+          placeholder="08..."
           required
         />
-        <label
-          htmlFor="corporate-packageSlug"
-          className="grid gap-2 text-sm font-semibold text-ink"
-        >
-          Package tier
+        <div className="grid gap-2 text-sm font-semibold text-ink">
+          <label htmlFor="corporate-packageSlug">Package tier</label>
           <select
             id="corporate-packageSlug"
-            className="min-h-11 rounded-md border border-line bg-surface px-3 text-base text-ink"
             name="packageSlug"
+            className="min-h-11 rounded-md border border-line bg-surface px-3 text-base text-ink"
             value={values.packageSlug}
             required
-            aria-invalid={state.fieldErrors.packageSlug ? "true" : undefined}
+            aria-invalid={fieldErrors.packageSlug ? "true" : undefined}
             aria-describedby={
-              state.fieldErrors.packageSlug ? "corporate-packageSlug-error" : undefined
+              fieldErrors.packageSlug ? "corporate-packageSlug-error" : undefined
             }
             onChange={(event) =>
               setValues((current) => ({ ...current, packageSlug: event.target.value }))
@@ -131,142 +262,75 @@ export function CorporateEnquiryForm({ packages }: CorporateEnquiryFormProps) {
               </option>
             ))}
           </select>
-          {state.fieldErrors.packageSlug ? (
+          {fieldErrors.packageSlug ? (
             <span id="corporate-packageSlug-error" className="text-sm text-ink-muted">
-              {state.fieldErrors.packageSlug}
+              {fieldErrors.packageSlug}
             </span>
           ) : null}
-        </label>
+        </div>
         <TextInput
+          id="corporate-estimated-quantity"
           label="Estimated quantity"
           name="estimatedQuantity"
-          type="number"
-          min="1"
+          type="text"
+          inputMode="numeric"
+          maxLength={estimatedQuantityMaxLength}
           value={values.estimatedQuantity}
-          error={state.fieldErrors.estimatedQuantity}
-          onChange={(value) => setValues((current) => ({ ...current, estimatedQuantity: value }))}
+          error={fieldErrors.estimatedQuantity}
+          onChange={(value: string) =>
+            setValues((current) => ({
+              ...current,
+              estimatedQuantity: formatEstimatedQuantityInput(value),
+            }))
+          }
           required
         />
         <TextInput
+          id="corporate-desired-date"
           label="Desired date"
           name="desiredDate"
           type="date"
+          min={desiredDateMin}
           value={values.desiredDate}
-          error={state.fieldErrors.desiredDate}
-          onChange={(value) => setValues((current) => ({ ...current, desiredDate: value }))}
+          error={fieldErrors.desiredDate}
+          onChange={(value: string) => setValues((current) => ({ ...current, desiredDate: value }))}
           required
         />
         <TextInput
+          id="corporate-customization"
           label="Customization request"
           name="customization"
           value={values.customization}
-          onChange={(value) => setValues((current) => ({ ...current, customization: value }))}
+          onChange={(value: string) =>
+            setValues((current) => ({ ...current, customization: value }))
+          }
         />
         <label htmlFor="corporate-notes" className="grid gap-2 text-sm font-semibold text-ink">
           Notes
           <textarea
             id="corporate-notes"
-            className="min-h-24 rounded-md border border-line bg-surface px-3 py-2 text-base text-ink"
             name="notes"
+            className="min-h-24 rounded-md border border-line bg-surface px-3 py-2 text-base text-ink"
             value={values.notes}
             onChange={(event) =>
               setValues((current) => ({ ...current, notes: event.target.value }))
             }
           />
         </label>
-        <label className="hidden" aria-hidden="true">
-          Website
-          <input
-            tabIndex={-1}
-            autoComplete="off"
-            name="website"
-            value=""
-            onChange={() => undefined}
-          />
-        </label>
-
-        {state.message ? (
+        {errorMessage ? (
           <p
-            id="corporate-form-status"
-            role={state.status === "error" ? "alert" : "status"}
+            id="corporate-form-error"
+            role="alert"
             className="rounded-md border border-line bg-surface-muted p-3 text-sm text-ink-muted"
           >
-            {state.message}
-            {state.referenceId ? ` Reference: ${state.referenceId}` : ""}
+            {errorMessage}
           </p>
         ) : null}
 
-        <Button type="submit" disabled={isPending}>
-          {isPending ? "Submitting..." : "Submit quotation request"}
+        <Button type="submit">
+          Continue to WhatsApp
         </Button>
       </form>
-
-      {whatsappUrl ? (
-        <Button
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          variant="outline"
-          className="mt-4 w-full"
-          onClick={() =>
-            trackEvent("whatsapp_click", {
-              source: "corporate_gifts_alternative",
-            })
-          }
-        >
-          Continue via WhatsApp instead
-        </Button>
-      ) : (
-        <p className="mt-4 rounded-md border border-dashed border-line bg-surface-muted p-3 text-sm text-ink-muted">
-          WhatsApp alternative requires the configured WhatsApp number.
-        </p>
-      )}
     </section>
-  );
-}
-
-function TextInput({
-  label,
-  name,
-  value,
-  onChange,
-  error,
-  type = "text",
-  required = false,
-  min,
-}: {
-  label: string;
-  name: string;
-  value: string;
-  onChange: (value: string) => void;
-  error?: string | undefined;
-  type?: string;
-  required?: boolean;
-  min?: string;
-}) {
-  const id = `corporate-${name}`;
-  const errorId = `${id}-error`;
-
-  return (
-    <label htmlFor={id} className="grid gap-2 text-sm font-semibold text-ink">
-      {label}
-      <input
-        id={id}
-        className="min-h-11 rounded-md border border-line bg-surface px-3 text-base text-ink"
-        name={name}
-        type={type}
-        value={value}
-        required={required}
-        min={min}
-        aria-invalid={error ? "true" : undefined}
-        aria-describedby={error ? errorId : undefined}
-        onChange={(event) => onChange(event.target.value)}
-      />
-      {error ? (
-        <span id={errorId} className="text-sm text-ink-muted">
-          {error}
-        </span>
-      ) : null}
-    </label>
   );
 }

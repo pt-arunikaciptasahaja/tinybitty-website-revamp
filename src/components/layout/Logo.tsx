@@ -6,7 +6,7 @@ export function Logo() {
   const hasLogoImage = Boolean(siteConfig.logo.imageSrc);
 
   return (
-    <Link href="/" className="inline-flex items-center gap-3 rounded-sm text-ink">
+    <Link href="/" aria-label={siteConfig.logo.label} className="inline-flex items-center rounded-sm text-ink">
       {hasLogoImage ? (
         <Image
           src={siteConfig.logo.imageSrc}
@@ -24,7 +24,7 @@ export function Logo() {
           TB
         </span>
       )}
-      <span className="text-lg font-bold tracking-normal">{siteConfig.logo.label}</span>
+      <span className="sr-only">{siteConfig.logo.label}</span>
     </Link>
   );
 }

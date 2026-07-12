@@ -14,7 +14,7 @@ const productFixtures = [
       "Buttery cookies layered with premium sliced almonds, chocolate chips, and crispy cornflakes for a nutty, golden crunch in every bite. Available in normal or less-sugar sweetness.",
     images: [
       {
-        src: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1771084224/ChatGPT_Image_Feb_14_2026_10_48_13_PM_hnpjrt.png",
+        src: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1783787034/ChatGPT_Image_Jul_11_2026_10_46_48_PM_onsrgh.png",
         alt: "Golden Crunch cookie with almonds and chocolate chips",
         width: 1200,
         height: 900,
@@ -83,7 +83,7 @@ const productFixtures = [
       "Rich dark cookie crumbs, chocolate chips, and choco cereal folded into a buttery cookie for a crisp, cookies-and-cream inspired bite without naming the brand.",
     images: [
       {
-        src: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1771084221/ChatGPT_Image_Feb_14_2026_10_45_13_PM_qudpo4.png",
+        src: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1783786888/ChatGPT_Image_Jul_11_2026_10_57_59_PM_peojn1.png",
         alt: "Heavenly Bites cookie with dark crumbs and chocolate chips",
         width: 1200,
         height: 900,
@@ -148,7 +148,7 @@ const productFixtures = [
       "Raisins and oats folded into a rich buttery cookie for a comforting mix of chewy fruit notes and crisp edges. Available in normal or less-sugar sweetness.",
     images: [
       {
-        src: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1771084222/ChatGPT_Image_Feb_14_2026_10_46_57_PM_khuilz.png",
+        src: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1783786888/ChatGPT_Image_Jul_11_2026_10_39_33_PM_3_bsiyb4.png",
         alt: "Harvest Haven cookie with raisins and oats",
         width: 1200,
         height: 900,
@@ -209,7 +209,7 @@ const productFixtures = [
       "The crown jewel of our collection, featuring a luxurious mix of roasted almonds, wholesome oats, and succulent Medjool dates for a sophisticated sweetness.",
     images: [
       {
-        src: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1771084221/ChatGPT_Image_Feb_14_2026_10_43_22_PM_kynlwe.png",
+        src: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1783787242/ChatGPT_Image_Jul_11_2026_11_22_29_PM_dn0xou.png",
         alt: "Desert Crown cookie with almonds, oats, and dates",
         width: 1200,
         height: 900,

@@ -25,6 +25,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", "Arial", "sans-serif"],
+        laila: ["Laila", "var(--font-sans)", "Arial", "sans-serif"],
+        "montserrat-heading": ["Montserrat", "var(--font-sans)", "Arial", "sans-serif"],
       },
       borderRadius: {
         xs: "var(--radius-xs)",

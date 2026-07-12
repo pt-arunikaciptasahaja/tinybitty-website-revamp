@@ -13,9 +13,14 @@ describe("ProductGrid", () => {
   it("renders product cards", () => {
     render(<ProductGrid products={products.filter((product) => product.category === "cookies")} />);
 
-    expect(screen.getByRole("link", { name: "View details" })).toHaveAttribute(
+    expect(screen.getAllByRole("link", { name: "View details" })).toHaveLength(4);
+    expect(screen.getByRole("heading", { name: "Golden Crunch" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "Golden Crunch cookie with almonds and chocolate chips" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "View details" })[0]).toHaveAttribute(
       "href",
-      "/cookies/placeholder-cookie-product",
+      "/cookies/golden-crunch",
     );
   });
 });

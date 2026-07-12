@@ -4,7 +4,7 @@ import { validateSiteConfig } from "@/content/validation";
 export const siteConfig = {
   name: "Tiny Bitty",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://tinybitty.shop",
-  description: "Sweet treats made to bring people closer.",
+  description: "Little bites that bring people together.",
   announcement: {
     enabled: true,
     text: "Same-day delivery is available in selected areas — confirm availability via WhatsApp.",
@@ -16,7 +16,8 @@ export const siteConfig = {
   instagramUrl: "https://www.instagram.com/tiny.bitty/",
   logo: {
     label: "Tiny Bitty",
-    imageSrc: "",
+    imageSrc:
+      "https://res.cloudinary.com/dodmwwp1w/image/upload/v1770742943/New_Logo_Tiny_Bitty_20260130_104635_0001_dsaafx_e_background_removal_f_png_cyeeux.png",
   },
   navigation: [
     { href: "/cookies", label: "Cookies" },

@@ -16,7 +16,7 @@ export function BundleGrid({ bundles, products }: BundleGridProps) {
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-2">
+    <div className="grid items-stretch gap-5 lg:grid-cols-2">
       {bundles.map((bundle) => (
         <BundleCard key={bundle.id} bundle={bundle} products={products} />
       ))}

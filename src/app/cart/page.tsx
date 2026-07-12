@@ -12,8 +12,8 @@ export default function CartPage() {
       <Container className="py-12 sm:py-16">
         <SectionHeader
           eyebrow="Cart"
-          title="WhatsApp checkout"
-          description="Review your items, add enquiry details, and open a pre-filled WhatsApp message for confirmation."
+          title="Send Order Enquiry"
+          description="Review your items, add delivery details, confirm the summary, and open a pre-filled WhatsApp message for final confirmation."
         />
         <div className="mt-8">
           <CheckoutForm />

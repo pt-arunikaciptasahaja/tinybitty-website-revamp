@@ -3,6 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+    ],
+  },
   async redirects() {
     return [
       {
@@ -18,6 +26,11 @@ const nextConfig: NextConfig = {
       {
         source: "/cookie",
         destination: "/cookies",
+        permanent: true,
+      },
+      {
+        source: "/cookie/:slug",
+        destination: "/cookies/:slug",
         permanent: true,
       },
       {
