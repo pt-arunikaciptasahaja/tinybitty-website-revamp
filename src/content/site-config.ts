@@ -12,6 +12,7 @@ export const siteConfig = {
     linkLabel: "Delivery info",
   },
   footerNote: "Stock, delivery fee, delivery schedule, and payment are confirmed through WhatsApp.",
+  contactEmail: "contact@tinybitty.shop",
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "6281112010160",
   instagramUrl: "https://www.instagram.com/tiny.bitty/",
   logo: {
