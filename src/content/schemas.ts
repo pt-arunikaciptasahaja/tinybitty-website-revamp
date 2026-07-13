@@ -221,6 +221,7 @@ export const siteConfigSchema = z.object({
     linkLabel: z.string().min(1),
   }),
   footerNote: z.string().min(1),
+  contactEmail: z.string().email(),
   whatsappNumber: z.string().min(1),
   instagramUrl: z.string().url(),
   logo: z.object({
