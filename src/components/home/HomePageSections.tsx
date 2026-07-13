@@ -394,4 +394,4 @@ export function HomePageSections() {
       </Container>
     </main>
   );
-}
+};
