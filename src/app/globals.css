@@ -78,13 +78,16 @@ a {
 }
 
 .hero-occasion-word {
-  animation: hero-occasion-cycle 10s infinite;
+  animation: hero-occasion-cycle 10s linear infinite both;
+  backface-visibility: hidden;
+  display: inline-block;
   opacity: 0;
   position: relative;
   text-shadow:
     0 0 0.4rem rgb(255 255 255 / 0.24),
     0 0 1rem rgb(255 255 255 / 0.16);
-  transform: translateY(0.85em);
+  transform: translate3d(0, 0.85em, 0);
+  will-change: opacity, transform;
 }
 
 .hero-occasion-word:nth-child(2) {
@@ -107,19 +110,19 @@ a {
   0%,
   8% {
     opacity: 0;
-    transform: translateY(0.85em);
+    transform: translate3d(0, 0.85em, 0);
   }
 
   12%,
   20% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 
   24%,
   100% {
     opacity: 0;
-    transform: translateY(-0.85em);
+    transform: translate3d(0, -0.85em, 0);
   }
 }
 
