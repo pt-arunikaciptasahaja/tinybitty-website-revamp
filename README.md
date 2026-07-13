@@ -74,6 +74,12 @@ Public variables:
 
 Do not put private credentials in public `NEXT_PUBLIC_*` variables.
 
+## Vercel Environments
+
+Use Vercel Preview as the pre-production environment. Vercel creates preview deployments automatically for pull requests, commits pushed to branches other than `main`, and CLI deployments run without `--prod`.
+
+Preview URLs should be used for QA and stakeholder review before production promotion. Keep production-only values scoped to Vercel's Production environment, and set preview-safe values in the Preview environment.
+
 ## Content Rules
 
 - Keep product, bundle, FAQ, corporate, and site content in `src/content`.

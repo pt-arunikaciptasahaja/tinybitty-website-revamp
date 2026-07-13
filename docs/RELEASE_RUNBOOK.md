@@ -29,7 +29,9 @@ Analytics IDs are optional. `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_WHATSAPP_NUM
 
 ## Deployment
 
-Use the deployment platform's preview build first. Verify:
+Use Vercel Preview as the pre-production environment. Vercel creates preview deployments for pull requests, commits pushed to branches other than `main`, and CLI deployments run without `--prod`.
+
+Use the preview build first. Verify:
 
 - The preview build passes all checks.
 - No production page exposes `[OWNER_INPUT_REQUIRED]`.
