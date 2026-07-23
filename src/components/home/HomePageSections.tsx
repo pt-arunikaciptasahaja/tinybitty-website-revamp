@@ -76,7 +76,10 @@ export function HomePageSections() {
           aria-hidden="true"
           focusable="false"
         >
-          <path pathLength="100" d="M 350 455 C 520 520, 650 205, 940 310" />
+          <path
+            pathLength="100"
+            d="M 105 365 C 360 440, 590 220, 785 295 C 850 175, 1035 155, 1100 290 C 1170 435, 1070 590, 915 575 C 760 560, 690 410, 770 300 C 850 190, 1030 230, 1045 365"
+          />
         </svg>
         <svg
           className="hero-crumb-path hero-crumb-path--mobile"
@@ -85,7 +88,10 @@ export function HomePageSections() {
           aria-hidden="true"
           focusable="false"
         >
-          <path pathLength="100" d="M 165 280 C 70 430, 330 590, 205 810" />
+          <path
+            pathLength="100"
+            d="M 55 285 C 220 330, 305 440, 310 585 C 320 760, 260 900, 130 875 C 15 850, 5 650, 120 575 C 240 500, 350 620, 305 770"
+          />
         </svg>
         <Container className="home-hero__inner">
           <nav className="journey-rail" aria-label="How to order">

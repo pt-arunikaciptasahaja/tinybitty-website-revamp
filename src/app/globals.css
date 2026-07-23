@@ -266,9 +266,9 @@ a {
   animation: hero-crumb-path-reveal 900ms var(--ease-out) 160ms both;
   fill: none;
   stroke: currentColor;
-  stroke-dasharray: 0.8 4.2;
+  stroke-dasharray: 0.55 4.45;
   stroke-linecap: round;
-  stroke-width: 3;
+  stroke-width: 2.25;
   vector-effect: non-scaling-stroke;
 }
 
@@ -1373,6 +1373,44 @@ a:hover .cta-arrow {
   .order-step__panel {
   opacity: 1;
   transform: translateX(0);
+}
+
+@media (min-width: 1024px) and (max-height: 900px) {
+  .home-hero {
+    min-height: calc(100svh - 6.5rem);
+    padding-block: var(--space-sm) var(--space-xl);
+  }
+
+  .home-hero__inner {
+    gap: var(--space-md);
+  }
+
+  .home-hero__grid {
+    gap: var(--space-xl);
+  }
+
+  .home-hero h1 {
+    font-size: clamp(3.75rem, 9vh, 5.5rem);
+  }
+
+  .home-hero__lede {
+    line-height: 1.5;
+    margin-top: var(--space-md);
+  }
+
+  .home-hero__actions,
+  .home-hero__note {
+    margin-top: var(--space-md);
+  }
+
+  .cookie-orbit {
+    min-height: 27rem;
+  }
+
+  .cookie-orbit::before {
+    height: 20rem;
+    width: 20rem;
+  }
 }
 
 @media (max-width: 1023px) {
