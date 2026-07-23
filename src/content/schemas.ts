@@ -166,6 +166,7 @@ export const testimonialSchema = placeholderFieldsSchema.and(
     id: z.string().min(1),
     quote: z.string().min(1),
     sourceLabel: z.string().min(1),
+    jobTitle: z.string().min(1),
     purchaseContext: z.string().optional(),
     hasPermission: z.boolean(),
   }),

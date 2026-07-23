@@ -7,7 +7,8 @@ const testimonialFixtures = [
     id: "testimonial-danielle",
     quote:
       "These cookies are insanely good… so comforting and nostalgic. Brought a box to the office and it disappeared in minutes.",
-    sourceLabel: "Danielle Mottoh",
+    sourceLabel: "Daniella Mottoh",
+    jobTitle: "UI/UX Manager",
     purchaseContext: "Office treat and weekend sharing",
     hasPermission: true,
   },
@@ -15,8 +16,9 @@ const testimonialFixtures = [
     contentStatus: "approved",
     id: "testimonial-fajar",
     quote:
-      "Bake-perfection at its finest… super crunchy on the outside, incredibly gooey inside. No thoughts, just pure bliss.",
-    sourceLabel: "Fajar Tri S",
+      "Nothing hits better after a good padel session… crunchy on the outside, gooey inside, and gone before the post-match recap is over.",
+    sourceLabel: "Fajar",
+    jobTitle: "Padel instructor",
     purchaseContext: "Cookie order for a cozy home moment",
     hasPermission: true,
   },

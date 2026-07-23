@@ -112,6 +112,7 @@ describe("content validation", () => {
       id: "invalid-testimonial",
       quote: "Approved content must not carry placeholder metadata.",
       sourceLabel: "Approved source",
+      jobTitle: "Approved role",
       hasPermission: true,
     };
 

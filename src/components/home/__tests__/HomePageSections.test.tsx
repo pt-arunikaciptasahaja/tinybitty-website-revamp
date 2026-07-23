@@ -17,34 +17,35 @@ describe("HomePageSections", () => {
     render(<HomePageSections />);
 
     expect(
-      screen.getByLabelText(
-        "Freshly baked cookies for sharing, gifting, family gatherings, office meetings, and corporate events.",
-      ),
+      screen.getByRole("heading", { name: "Little bites that bring people together." }),
     ).toBeInTheDocument();
-    const heroBackgrounds = Array.from(document.querySelectorAll("[aria-hidden='true']"))
-      .map((element) => (element as HTMLElement).style.backgroundImage)
-      .join(" ");
-    expect(heroBackgrounds).toContain("ChatGPT_Image_Jul_11_2026_05_37_28_PM");
-    expect(heroBackgrounds).toContain("ChatGPT_Image_Jul_11_2026_05_20_36_PM");
-    expect(screen.getByText("Freshly baked cookies for")).toBeInTheDocument();
-    expect(screen.getByText("corporate events")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Cookie catalogue" })).toBeInTheDocument();
+    expect(screen.getByRole("navigation", { name: "How to order" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Start with a favorite." })).toBeInTheDocument();
     expect(
       screen.getAllByRole("img", { name: "Golden Crunch cookie with almonds and chocolate chips" }),
     ).not.toHaveLength(0);
-    expect(screen.getByRole("heading", { name: "Choose your sweetness" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Bundle offers" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Same cookie. Your sweetness." }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Bundle the good stuff." })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Sweet Sharing Mini Bundle" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Sweet Sharing Small Bundle" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Sweet Sharing Medium Bundle" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Sweet Sharing Medium Bundle" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Sweet Sharing Large Bundle" })).toBeInTheDocument();
     expect(screen.getAllByText("Save Rp5.000 from the normal total.")).toHaveLength(4);
-    expect(screen.getByRole("heading", { name: "Reviews and permissions" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Customer notes, shared with care." }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Daniella Mottoh")).toBeInTheDocument();
+    expect(screen.getByText("UI/UX Manager")).toBeInTheDocument();
+    expect(screen.getByText("Fajar")).toBeInTheDocument();
+    expect(screen.getByText("Padel instructor")).toBeInTheDocument();
     expect(screen.getByText("Customer review pending approval")).toBeInTheDocument();
-    expect(screen.getByText("Photo permission pending approval")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: "Cookie gifts for meetings, events, and client appreciation",
+        name: "Cookies that arrive ready for the occasion.",
       }),
     ).toBeInTheDocument();
     expect(
@@ -54,19 +55,19 @@ describe("HomePageSections", () => {
     ).toBeInTheDocument();
     const removedCategoryPath = `/${["ju", "ice"].join("")}`;
     expect(document.querySelector(`a[href="${removedCategoryPath}"]`)).toBeNull();
-    expect(screen.getByRole("heading", { name: "WhatsApp enquiry flow" })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Tiny Bitty moments, coming soon" }),
+      screen.getByRole("heading", { name: "Three small steps. One helpful chat." }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "A closer look is coming." })).toBeInTheDocument();
     expect(screen.getAllByText("Coming soon")).toHaveLength(3);
-    expect(screen.getByRole("heading", { name: "Questions before you order?" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Questions? Start here." })).toBeInTheDocument();
   });
 
   it("tracks hero CTA interactions", () => {
     render(<HomePageSections />);
 
-    fireEvent.click(screen.getByRole("link", { name: "Shop Best Sellers" }));
-    fireEvent.click(screen.getByRole("link", { name: "Corporate Orders" }));
+    fireEvent.click(screen.getByRole("link", { name: "Shop best sellers" }));
+    fireEvent.click(screen.getByRole("link", { name: "Corporate orders" }));
 
     expect(trackEvent).toHaveBeenCalledWith("select_item", {
       source: "homepage_hero_primary",

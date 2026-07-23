@@ -1,0 +1,52 @@
+:root {
+  --color-paper: oklch(97% 0.012 95);
+  --color-paper-raised: oklch(99% 0.006 95);
+  --color-paper-soft: oklch(94% 0.022 92);
+  --color-ink-deep: oklch(25% 0.025 170);
+  --color-ink-soft: oklch(46% 0.03 165);
+  --color-rule-soft: oklch(86% 0.025 145);
+  --color-accent-mint: oklch(73% 0.13 155);
+  --color-accent-mint-strong: oklch(56% 0.12 158);
+  --color-accent-ink: oklch(25% 0.025 170);
+  --color-accent-pink: oklch(82% 0.08 25);
+  --color-accent-lime: oklch(86% 0.1 115);
+  --color-accent-blue: oklch(72% 0.1 220);
+  --color-accent-yellow: oklch(88% 0.13 92);
+  --color-focus-ring: oklch(52% 0.13 157);
+  --color-shadow-soft: oklch(25% 0.025 170 / 0.12);
+
+  --font-display: "Montserrat", "Laila", Arial, sans-serif;
+  --font-body: "Montserrat", "Laila", Arial, sans-serif;
+  --font-label: "Montserrat", Arial, sans-serif;
+
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4.5rem;
+  --space-3xl: 7rem;
+  --space-4xl: 9rem;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: clamp(1.75rem, 4vw, 3rem);
+  --text-display: clamp(3.1rem, 8vw, 6.8rem);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur-base: 240ms;
+  --dur-reveal: 620ms;
+  --dur-nav: 420ms;
+
+  --radius-card: 1.5rem;
+  --radius-card-sm: 1rem;
+  --radius-pill-control: 999rem;
+  --rule-thin: 1px;
+}

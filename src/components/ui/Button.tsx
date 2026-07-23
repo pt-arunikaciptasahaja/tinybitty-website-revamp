@@ -11,13 +11,13 @@ type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
 
 const baseClasses =
-  "inline-flex items-center justify-center gap-2 rounded-pill font-semibold transition-colors duration-base ease-smooth focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 disabled:pointer-events-none disabled:opacity-50";
+  "hallmark-button inline-flex items-center justify-center gap-2 rounded-pill font-semibold focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 disabled:pointer-events-none disabled:opacity-50";
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-brand-green text-white hover:bg-brand-green/90",
-  secondary: "bg-brand-pink/35 text-ink hover:bg-brand-pink/50",
-  outline: "border border-brand-green text-brand-green hover:bg-brand-green/8",
-  ghost: "text-brand-green hover:bg-brand-green/8",
+  primary: "hallmark-button--primary bg-brand-green text-white",
+  secondary: "hallmark-button--secondary bg-brand-pink/35 text-ink",
+  outline: "hallmark-button--outline border border-brand-green text-brand-green",
+  ghost: "hallmark-button--ghost text-brand-green",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

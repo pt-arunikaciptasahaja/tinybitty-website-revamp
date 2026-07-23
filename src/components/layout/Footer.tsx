@@ -14,8 +14,9 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-line bg-surface-raised pb-20 text-sm text-ink-muted md:pb-0">
+    <footer className="site-footer border-t border-line bg-surface-raised pb-20 text-sm text-ink-muted md:pb-0">
       <Container className="py-10">
+        <p className="site-footer__statement">Good things come in little bites.</p>
         <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr_1fr]">
           <section className="max-w-md">
             <Logo />
