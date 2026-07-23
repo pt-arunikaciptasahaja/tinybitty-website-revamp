@@ -7,7 +7,6 @@
  * mobile: code-audited (browser verification blocked by local port sandbox)
  */
 @import "../../tokens.css";
-@import url("https://fonts.googleapis.com/css2?family=Laila:wght@600;700&family=Montserrat:wght@400;500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -850,6 +849,9 @@ a:hover .cta-arrow {
   border: var(--rule-thin) solid var(--color-rule-soft);
   border-radius: var(--radius-card);
   display: grid;
+  font-family: var(--font-sans);
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
   min-width: 0;
   overflow: hidden;
   transition:
@@ -890,12 +892,23 @@ a:hover .cta-arrow {
   margin: var(--space-xs) 0 0;
 }
 
-.cookie-card__body > p:not(.cookie-card__index, .cookie-card__price),
+.cookie-card h3 {
+  font-family: inherit;
+  font-weight: 600;
+  min-height: 2.24em;
+}
+
+.cookie-card__description,
 .bundle-card > p:last-child,
 .journal-grid p {
   color: var(--color-ink-soft);
   font-size: var(--text-sm);
-  line-height: 1.65;
+  line-height: 1.5rem;
+}
+
+.cookie-card__description {
+  flex: 1;
+  margin-block: var(--space-xs) var(--space-sm);
 }
 
 .cookie-card__price,
@@ -907,7 +920,7 @@ a:hover .cta-arrow {
 
 .cookie-card__link {
   justify-content: flex-start;
-  margin-top: auto;
+  margin-top: var(--space-sm);
   padding-inline: 0;
   white-space: nowrap;
 }
@@ -1532,7 +1545,44 @@ a:hover .cta-arrow {
     opacity: 0.14;
   }
 
-  .cookie-grid,
+  .cookie-grid {
+    gap: var(--space-2xs);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cookie-card__body {
+    padding: var(--space-xs);
+  }
+
+  .cookie-card h3 {
+    font-size: 1rem;
+  }
+
+  .cookie-card__description {
+    display: -webkit-box;
+    flex: none;
+    font-size: var(--text-xs);
+    line-height: 1.25rem;
+    margin-block: var(--space-2xs);
+    min-height: 2.5rem;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .cookie-card__price {
+    font-size: var(--text-xs);
+    line-height: 1.25rem;
+    margin-block: var(--space-2xs) 0;
+    min-height: 1.25rem;
+  }
+
+  .cookie-card__link {
+    font-size: var(--text-xs);
+    gap: var(--space-3xs);
+    margin-top: var(--space-2xs);
+  }
+
   .bundle-track {
     grid-template-columns: minmax(0, 1fr);
   }

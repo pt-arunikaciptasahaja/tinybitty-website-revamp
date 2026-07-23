@@ -195,7 +195,7 @@ export function HomePageSections() {
                   <div className="cookie-card__body">
                     <p className="cookie-card__index">{String(index + 1).padStart(2, "0")}</p>
                     <h3>{product.name}</h3>
-                    <p>{product.shortDescription}</p>
+                    <p className="cookie-card__description">{product.shortDescription}</p>
                     {variant ? (
                       <p className="cookie-card__price">
                         {variant.label} · <Price amount={variant.price.amount} />

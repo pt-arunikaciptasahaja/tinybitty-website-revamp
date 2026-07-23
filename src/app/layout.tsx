@@ -54,6 +54,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        {/* This root layout is the App Router equivalent of a global document head. */}
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Laila:wght@600;700&family=Montserrat:wght@400;500;600;700;800&display=swap"
+        />
+      </head>
       <body>
         <OrganizationJsonLd />
         <AnalyticsScripts />
