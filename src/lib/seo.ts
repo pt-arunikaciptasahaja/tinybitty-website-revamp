@@ -15,7 +15,13 @@ export const routeSeo = {
     path: "/",
     title: "Tiny Bitty",
     description:
-      "Tiny Bitty is a cookie catalogue for individual orders, bundles, and corporate gifts.",
+      "Explore Tiny Bitty cookies and juices, cookie bundles, and corporate gifts. Confirm order enquiries on WhatsApp.",
+  },
+  juices: {
+    path: "/juices",
+    title: "Juices",
+    description:
+      "Explore Tiny Bitty juices and enquire about prices, availability, and delivery through WhatsApp.",
   },
   cookies: {
     path: "/cookies",

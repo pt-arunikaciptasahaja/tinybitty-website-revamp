@@ -6,7 +6,8 @@ import { faqs } from "@/content/faqs";
 import { products } from "@/content/products";
 import { siteConfig } from "@/content/site-config";
 import { testimonials } from "@/content/testimonials";
-import { CookieOrbitSticker } from "@/components/home/CookieOrbitSticker";
+import { JuiceCollection } from "@/features/juices/JuiceCollection";
+import { HeroCollectionVisual } from "@/components/home/HeroCollectionVisual";
 import { HomeRevealMotion } from "@/components/home/HomeRevealMotion";
 import { TrackedLink } from "@/components/home/TrackedLink";
 import { Container } from "@/components/ui/Container";
@@ -62,7 +63,6 @@ export function HomePageSections() {
   const bestSellers = products.filter((product) => product.category === "cookies").slice(0, 4);
   const firstCorporatePackage = corporatePackages[0];
   const visibleFaqs = faqs.slice(0, 4);
-  const heroProducts = bestSellers.slice(0, 2);
 
   return (
     <main className="home-page" data-homepage>
@@ -109,31 +109,31 @@ export function HomePageSections() {
 
           <div className="home-hero__grid">
             <div className="home-hero__copy">
-              <p className="home-kicker">Homemade cookies · made for sharing</p>
-              <h1>Little bites that bring people together.</h1>
+              <p className="home-kicker juice-launch-badge">New: Tiny Bitty Juice</p>
+              <h1>Little bites. Refreshing sips.</h1>
               <p className="home-hero__lede">
-                Choose a cookie, pick the size and sweetness that fits, then continue your enquiry
-                on WhatsApp. Tiny Bitty confirms the details with you before every order.
+                Explore our new juice collection alongside your favorite Tiny Bitty cookies. Order
+                enquiries are confirmed on WhatsApp.
               </p>
               <div className="home-hero__actions">
                 <TrackedLink
-                  href="/cookies"
+                  href="/juices"
                   eventName="select_item"
                   payload={{ source: "homepage_hero_primary" }}
                   size="lg"
                   className="tactile-button"
                 >
-                  Shop best sellers
+                  Explore juices
                 </TrackedLink>
                 <TrackedLink
-                  href="/corporate-gifts"
-                  eventName="corporate_enquiry"
+                  href="/cookies"
+                  eventName="select_item"
                   payload={{ source: "homepage_hero_secondary" }}
                   size="lg"
                   variant="outline"
                   className="tactile-button tactile-button--outline"
                 >
-                  Corporate orders <Arrow />
+                  Shop cookies <Arrow />
                 </TrackedLink>
               </div>
               <p className="home-hero__note">
@@ -141,30 +141,25 @@ export function HomePageSections() {
               </p>
             </div>
 
-            <div className="cookie-orbit" aria-label="Featured Tiny Bitty cookies">
-              {heroProducts.map((product, index) => (
-                <Link
-                  key={product.id}
-                  href={`/cookies/${product.slug}`}
-                  className={`cookie-orbit__card cookie-orbit__card--${index + 1}`}
-                >
-                  <ProductImage product={product} className="cookie-orbit__image" />
-                  <span className="cookie-orbit__label">{product.name}</span>
-                </Link>
-              ))}
-              <div className="cookie-orbit__note" data-reveal>
-                <CookieOrbitSticker />
-                <p>
-                  <strong>Pick your favorite.</strong>
-                  <br />
-                  We’ll help with the rest.
-                </p>
-              </div>
-            </div>
+            <HeroCollectionVisual cookies={bestSellers.slice(0, 2)} />
           </div>
         </Container>
       </section>
 
+      <section id="juices" className="home-section home-section--juices">
+        <Container>
+          <header className="home-section__header">
+            <div>
+              <p className="home-kicker">The juice collection</p>
+              <h2>Meet your new favorite sip.</h2>
+            </div>
+            <Link href="/juices" className="home-text-link">
+              View all juices <Arrow />
+            </Link>
+          </header>
+          <JuiceCollection />
+        </Container>
+      </section>
       <section id="cookies" className="home-section home-section--catalog">
         <Container>
           <header className="home-section__header" data-reveal>

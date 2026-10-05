@@ -17,12 +17,14 @@ describe("HomePageSections", () => {
     render(<HomePageSections />);
 
     expect(
-      screen.getByRole("heading", { name: "Little bites that bring people together." }),
+      screen.getByRole("heading", { name: "Little bites. Refreshing sips." }),
     ).toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: "How to order" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Start with a favorite." })).toBeInTheDocument();
     expect(
-      screen.getAllByRole("img", { name: "Golden Crunch cookie with almonds and chocolate chips" }),
+      screen.getAllByRole("img", {
+        name: "Four Tiny Bitty juice bottles displayed together in the juice collection launch image",
+      }),
     ).not.toHaveLength(0);
     expect(
       screen.getByRole("heading", { name: "Same cookie. Your sweetness." }),
@@ -53,8 +55,9 @@ describe("HomePageSections", () => {
         "MOQ: 50 pcs for Mini 30gr and Small 100gr, or 30 pcs for Medium 150gr and Large 400gr",
       ),
     ).toBeInTheDocument();
-    const removedCategoryPath = `/${["ju", "ice"].join("")}`;
-    expect(document.querySelector(`a[href="${removedCategoryPath}"]`)).toBeNull();
+    expect(
+      screen.getByRole("heading", { name: "Meet your new favorite sip." }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Three small steps. One helpful chat." }),
     ).toBeInTheDocument();
@@ -66,13 +69,13 @@ describe("HomePageSections", () => {
   it("tracks hero CTA interactions", () => {
     render(<HomePageSections />);
 
-    fireEvent.click(screen.getByRole("link", { name: "Shop best sellers" }));
-    fireEvent.click(screen.getByRole("link", { name: "Corporate orders" }));
+    fireEvent.click(screen.getByRole("link", { name: "Explore juices" }));
+    fireEvent.click(screen.getByRole("link", { name: "Shop cookies" }));
 
     expect(trackEvent).toHaveBeenCalledWith("select_item", {
       source: "homepage_hero_primary",
     });
-    expect(trackEvent).toHaveBeenCalledWith("corporate_enquiry", {
+    expect(trackEvent).toHaveBeenCalledWith("select_item", {
       source: "homepage_hero_secondary",
     });
   });

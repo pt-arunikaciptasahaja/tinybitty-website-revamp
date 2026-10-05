@@ -11,7 +11,8 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: "NEXT_PUBLIC_WHATSAPP_NUMBER=6281112010160 pnpm dev --hostname 127.0.0.1",
+    command: "corepack pnpm dev --hostname 127.0.0.1",
+    env: { NEXT_PUBLIC_WHATSAPP_NUMBER: "6281112010160" },
     url: "http://127.0.0.1:3000",
     reuseExistingServer: !process.env.CI,
   },

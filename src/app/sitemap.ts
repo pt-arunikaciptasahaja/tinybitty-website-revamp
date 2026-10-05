@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { juiceProducts } from "@/content/juices";
 import { bundles } from "@/content/bundles";
 import { products } from "@/content/products";
 import { buildAbsoluteUrl, staticRouteSeo } from "@/lib/seo";
@@ -20,5 +21,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified,
   }));
 
-  return [...staticRoutes, ...productRoutes, ...bundleRoutes];
+  return [
+    ...staticRoutes,
+    ...productRoutes,
+    ...bundleRoutes,
+    ...juiceProducts.map((juice) => ({
+      url: buildAbsoluteUrl("/juices/" + juice.slug),
+      lastModified,
+    })),
+  ];
 }

@@ -35,7 +35,7 @@ export function Header() {
       <AnnouncementBar />
       <Container className="site-header__inner relative flex min-h-16 items-center justify-between gap-4 py-3">
         <Logo />
-        <nav aria-label="Primary navigation" className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Primary navigation" className="hidden items-center gap-1 lg:flex">
           {siteConfig.navigation.map((item) => (
             <Link
               key={item.href}
@@ -73,7 +73,7 @@ export function Header() {
               </span>
             </Link>
           ) : null}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <Button href={siteConfig.stickyCta.href} size="sm">
               {siteConfig.stickyCta.label}
             </Button>

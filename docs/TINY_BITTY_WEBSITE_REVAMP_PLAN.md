@@ -35,4 +35,4 @@ The foundation phase establishes tooling, tests, CI, folder architecture, and sa
 
 ## Product Scope Update
 
-Tiny Bitty Version 1 sells cookie products only. Bundles and corporate gifts remain in scope as cookie-based order journeys. Non-cookie product categories, navigation, routes, analytics events, SEO metadata, and homepage sections should be removed rather than hidden.
+The juice launch extends Version 1 with /juices and /juices/[slug] enquiry-only catalogue pages. Cookies, cookie bundles, and corporate gifts remain supported. Juice has separate product information and no cookie sweetness or bundle discounts. See JUICE_LAUNCH_PLAN.md.

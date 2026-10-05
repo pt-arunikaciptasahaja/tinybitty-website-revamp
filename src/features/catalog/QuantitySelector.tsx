@@ -4,10 +4,17 @@ import { useState } from "react";
 
 type QuantitySelectorProps = {
   disabled?: boolean;
+  value?: number;
+  onChange?: (quantity: number) => void;
 };
 
-export function QuantitySelector({ disabled = false }: QuantitySelectorProps) {
-  const [quantity, setQuantity] = useState(1);
+export function QuantitySelector({ disabled = false, value, onChange }: QuantitySelectorProps) {
+  const [localQuantity, setLocalQuantity] = useState(1);
+  const quantity = value ?? localQuantity;
+  function setQuantity(next: number) {
+    setLocalQuantity(next);
+    onChange?.(next);
+  }
 
   return (
     <div className="rounded-lg border border-line p-4">
@@ -18,7 +25,7 @@ export function QuantitySelector({ disabled = false }: QuantitySelectorProps) {
           className="grid h-10 w-10 place-items-center rounded-pill border border-line text-lg font-semibold disabled:opacity-40"
           disabled={disabled || quantity <= 1}
           aria-label="Decrease quantity"
-          onClick={() => setQuantity((current) => Math.max(1, current - 1))}
+          onClick={() => setQuantity(Math.max(1, quantity - 1))}
         >
           -
         </button>
@@ -33,7 +40,7 @@ export function QuantitySelector({ disabled = false }: QuantitySelectorProps) {
           className="grid h-10 w-10 place-items-center rounded-pill border border-line text-lg font-semibold disabled:opacity-40"
           disabled={disabled}
           aria-label="Increase quantity"
-          onClick={() => setQuantity((current) => current + 1)}
+          onClick={() => setQuantity(quantity + 1)}
         >
           +
         </button>

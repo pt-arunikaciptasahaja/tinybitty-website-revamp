@@ -22,6 +22,7 @@ export const siteConfig = {
   },
   navigation: [
     { href: "/cookies", label: "Cookies" },
+    { href: "/juices", label: "Juice" },
     { href: "/bundles", label: "Bundles" },
     { href: "/corporate-gifts", label: "Corporate Gifts" },
     { href: "/about", label: "Our Story" },

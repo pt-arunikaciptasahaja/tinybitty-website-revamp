@@ -18,3 +18,5 @@ export {
 } from "@/content/schemas";
 export { siteConfig } from "@/content/site-config";
 export { testimonials } from "@/content/testimonials";
+
+export { juiceProducts, type Juice } from "@/content/juices";

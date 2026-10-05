@@ -59,7 +59,9 @@ function getDeliveryDateRange() {
 
 export function CheckoutForm() {
   const { items, subtotal, updateQuantity, removeItem, clearCart } = useCart();
-  const orderTotal = subtotal + flatDeliveryFee;
+  const needsQuote = items.some((item) => item.kind === "juice" || item.unitPrice === null);
+  const deliveryFee = needsQuote ? null : flatDeliveryFee;
+  const orderTotal = subtotal + (deliveryFee ?? 0);
   const deliveryDateRange = useMemo(() => getDeliveryDateRange(), []);
   const [formState, setFormState] = useState(initialFormState);
   const [errorMessage, setErrorMessage] = useState("");
@@ -74,7 +76,7 @@ export function CheckoutForm() {
         item_name: item.label,
         item_category: item.kind,
         ...(item.detail ? { item_variant: item.detail } : {}),
-        price: item.unitPrice,
+        ...(item.unitPrice === null ? {} : { price: item.unitPrice }),
         quantity: item.quantity,
       })),
     [items],
@@ -122,7 +124,7 @@ export function CheckoutForm() {
       customer: formState,
       items: toWhatsAppLineItems(items),
       subtotal,
-      deliveryFee: flatDeliveryFee,
+      deliveryFee,
     });
     const url = buildWhatsAppUrl(siteConfig.whatsappNumber, message);
 
@@ -157,7 +159,7 @@ export function CheckoutForm() {
     setFormState(initialFormState);
     setFieldErrors({});
     setErrorMessage("");
-  };
+  }
 
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)]">
@@ -189,11 +191,21 @@ export function CheckoutForm() {
                     <p className="font-semibold text-ink">{item.label}</p>
                     {item.detail ? <p className="text-sm text-ink-muted">{item.detail}</p> : null}
                     <p className="mt-1 text-sm text-ink-muted">
-                      <Price amount={item.unitPrice} /> each
+                      {item.unitPrice === null ? (
+                        "Ask for price"
+                      ) : (
+                        <>
+                          <Price amount={item.unitPrice} /> each
+                        </>
+                      )}
                     </p>
                   </div>
                   <p className="font-semibold text-brand-green">
-                    <Price amount={item.unitPrice * item.quantity} />
+                    {item.unitPrice === null ? (
+                      "Ask for price"
+                    ) : (
+                      <Price amount={item.unitPrice * item.quantity} />
+                    )}
                   </p>
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -215,7 +227,10 @@ export function CheckoutForm() {
                         inputMode="numeric"
                         value={item.quantity}
                         onChange={(event) =>
-                          updateQuantity(item.id, Math.max(1, Number.parseInt(event.target.value, 10) || 1))
+                          updateQuantity(
+                            item.id,
+                            Math.max(1, Number.parseInt(event.target.value, 10) || 1),
+                          )
                         }
                       />
                       <button
@@ -252,7 +267,14 @@ export function CheckoutForm() {
           stock, delivery fee, schedule, and payment through WhatsApp.
         </p>
         <p className="mt-5 text-lg font-semibold text-brand-green">
-          Subtotal: <Price amount={subtotal} />
+          {items.some((item) => item.unitPrice === null)
+            ? "Known-price subtotal (excludes unpriced items): "
+            : "Subtotal: "}
+          {items.some((item) => item.unitPrice !== null) ? (
+            <Price amount={subtotal} />
+          ) : (
+            "Awaiting quotation"
+          )}
         </p>
 
         <form className="mt-5 grid gap-4" onSubmit={handleSubmit}>
@@ -354,7 +376,7 @@ export function CheckoutForm() {
             items={items}
             orderId={reviewState.orderId}
             subtotal={subtotal}
-            deliveryFee={flatDeliveryFee}
+            deliveryFee={deliveryFee}
             whatsappUrl={reviewState.whatsappUrl}
             onClose={() => setReviewState(null)}
             onWhatsAppOpen={handleWhatsAppOpen}
@@ -370,7 +392,7 @@ type OrderReviewModalProps = {
   items: ReturnType<typeof useCart>["items"];
   orderId: string;
   subtotal: number;
-  deliveryFee: number;
+  deliveryFee: number | null;
   whatsappUrl: string;
   onClose: () => void;
   onWhatsAppOpen: () => void;
@@ -386,7 +408,7 @@ function OrderReviewModal({
   onClose,
   onWhatsAppOpen,
 }: OrderReviewModalProps) {
-  const total = subtotal + deliveryFee;
+  const total = subtotal + (deliveryFee ?? 0);
 
   return (
     <div
@@ -426,29 +448,42 @@ function OrderReviewModal({
                     <p className="text-ink-muted">Qty {item.quantity}</p>
                   </div>
                   <p className="font-semibold text-brand-green">
-                    <Price amount={item.unitPrice * item.quantity} />
+                    {item.unitPrice === null ? (
+                      "Ask for price"
+                    ) : (
+                      <Price amount={item.unitPrice * item.quantity} />
+                    )}
                   </p>
                 </li>
               ))}
             </ul>
             <p className="mt-4 border-t border-line pt-3 text-right font-semibold text-brand-green">
-              Subtotal: <Price amount={subtotal} />
+              {items.some((item) => item.unitPrice === null)
+                ? "Known-price subtotal (excludes unpriced items): "
+                : "Subtotal: "}
+              {items.some((item) => item.unitPrice !== null) ? (
+                <Price amount={subtotal} />
+              ) : (
+                "Awaiting quotation"
+              )}
             </p>
             <dl className="mt-3 grid gap-2 border-t border-line pt-3 text-sm">
               <div className="flex items-center justify-between gap-4">
                 <dt className="font-semibold text-ink">Delivery service</dt>
-                <dd className="text-right text-ink-muted">Flat delivery</dd>
+                <dd className="text-right text-ink-muted">
+                  {deliveryFee === null ? "Confirm on WhatsApp" : "Flat delivery"}
+                </dd>
               </div>
               <div className="flex items-center justify-between gap-4">
                 <dt className="font-semibold text-ink">Delivery cost</dt>
                 <dd className="font-semibold text-brand-green">
-                  <Price amount={deliveryFee} />
+                  {deliveryFee === null ? "Confirm on WhatsApp" : <Price amount={deliveryFee} />}
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-4 border-t border-line pt-3 text-base">
                 <dt className="font-semibold text-ink">Total to pay</dt>
                 <dd className="font-semibold text-brand-green">
-                  <Price amount={total} />
+                  {deliveryFee === null ? "Awaiting quotation" : <Price amount={total} />}
                 </dd>
               </div>
             </dl>
@@ -487,8 +522,8 @@ function OrderReviewModal({
           </section>
 
           <p className="rounded-lg border border-line bg-surface-muted p-4 text-sm leading-6 text-ink-muted">
-            Bank transfer details are included in the WhatsApp message. Stock and final schedule
-            are confirmed in WhatsApp before the order is final.
+            Bank transfer details are included in the WhatsApp message. Stock and final schedule are
+            confirmed in WhatsApp before the order is final.
           </p>
         </div>
 

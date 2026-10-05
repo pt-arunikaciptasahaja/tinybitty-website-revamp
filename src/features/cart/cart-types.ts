@@ -1,4 +1,4 @@
-export type CartItemKind = "product" | "bundle";
+export type CartItemKind = "product" | "bundle" | "juice";
 
 export type CartItem = {
   id: string;
@@ -8,7 +8,7 @@ export type CartItem = {
   bundleId?: string;
   label: string;
   detail?: string;
-  unitPrice: number;
+  unitPrice: number | null;
   quantity: number;
 };
 

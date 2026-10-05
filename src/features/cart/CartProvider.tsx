@@ -33,17 +33,34 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    if (typeof window === "undefined") {
-      return [];
-    }
-
-    return parseStoredCart(window.localStorage.getItem(CART_STORAGE_KEY)).items;
-  });
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [storageLoaded, setStorageLoaded] = useState(false);
 
   useEffect(() => {
-    window.localStorage.setItem(CART_STORAGE_KEY, serializeCart({ items }));
-  }, [items]);
+    let cancelled = false;
+    // Match the server's empty snapshot before restoring browser-only saved items.
+    queueMicrotask(() => {
+      if (cancelled) return;
+      try {
+        setItems(parseStoredCart(window.localStorage.getItem(CART_STORAGE_KEY)).items);
+      } catch {
+        setItems([]);
+      }
+      setStorageLoaded(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!storageLoaded) return;
+    try {
+      window.localStorage.setItem(CART_STORAGE_KEY, serializeCart({ items }));
+    } catch {
+      /* The enquiry remains usable when browser storage is unavailable. */
+    }
+  }, [items, storageLoaded]);
 
   const addItem = useCallback((item: CartItem) => {
     setItems((currentItems) => addCartItem(currentItems, item));

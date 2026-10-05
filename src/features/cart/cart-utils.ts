@@ -1,6 +1,19 @@
+import { juiceProducts, juiceVolumeLabel, type Juice } from "@/content/juices";
 import type { Bundle, Product, ProductVariant } from "@/content/schemas";
 import type { WhatsAppLineItem } from "@/lib/whatsapp";
 import type { CartItem, CartSnapshot } from "@/features/cart/cart-types";
+
+export function createJuiceCartItem(juice: Juice, quantity: number): CartItem {
+  return {
+    id: "juice:" + juice.id,
+    kind: "juice",
+    productId: juice.id,
+    label: juice.name,
+    detail: juiceVolumeLabel(juice),
+    unitPrice: juice.pricing.amount,
+    quantity: sanitizeQuantity(quantity),
+  };
+}
 
 export const CART_STORAGE_KEY = "tinybitty.cart.v1";
 
@@ -46,7 +59,7 @@ export function addCartItem(items: readonly CartItem[], item: CartItem): CartIte
 
   return items.map((currentItem) =>
     currentItem.id === item.id
-      ? { ...currentItem, quantity: currentItem.quantity + item.quantity }
+      ? { ...currentItem, quantity: sanitizeQuantity(currentItem.quantity + item.quantity) }
       : currentItem,
   );
 }
@@ -70,7 +83,10 @@ export function removeCartItem(items: readonly CartItem[], itemId: string): Cart
 }
 
 export function calculateCartSubtotal(items: readonly CartItem[]): number {
-  return items.reduce((subtotal, item) => subtotal + item.unitPrice * item.quantity, 0);
+  return items.reduce(
+    (subtotal, item) => subtotal + (item.unitPrice === null ? 0 : item.unitPrice * item.quantity),
+    0,
+  );
 }
 
 export function toWhatsAppLineItems(items: readonly CartItem[]): WhatsAppLineItem[] {
@@ -79,7 +95,7 @@ export function toWhatsAppLineItems(items: readonly CartItem[]): WhatsAppLineIte
     ...(item.detail ? { detail: item.detail } : {}),
     quantity: item.quantity,
     unitPrice: item.unitPrice,
-    subtotal: item.unitPrice * item.quantity,
+    subtotal: item.unitPrice === null ? null : item.unitPrice * item.quantity,
   }));
 }
 
@@ -100,11 +116,19 @@ export function parseStoredCart(value: string | null): CartSnapshot {
     }
 
     return {
-      items: parsedValue.items.map((item) => ({
-        ...item,
-        quantity: sanitizeQuantity(item.quantity),
-        unitPrice: Math.max(0, Math.trunc(item.unitPrice)),
-      })),
+      items: parsedValue.items.flatMap((item) => {
+        if (item.kind === "juice") {
+          const juice = juiceProducts.find((product) => product.id === item.productId);
+          return juice ? [createJuiceCartItem(juice, item.quantity)] : [];
+        }
+        return [
+          {
+            ...item,
+            quantity: sanitizeQuantity(item.quantity),
+            unitPrice: Math.max(0, Math.trunc(item.unitPrice!)),
+          },
+        ];
+      }),
     };
   } catch {
     return { items: [] };
@@ -120,7 +144,7 @@ export function bundleCartItemId(bundleId: string): string {
 }
 
 function sanitizeQuantity(quantity: number): number {
-  return Math.max(1, Math.trunc(quantity));
+  return Number.isFinite(quantity) ? Math.max(1, Math.trunc(quantity)) : 1;
 }
 
 function isCartSnapshot(value: unknown): value is CartSnapshot {
@@ -142,10 +166,15 @@ function isCartItem(value: unknown): value is CartItem {
 
   return (
     typeof candidate.id === "string" &&
-    (candidate.kind === "product" || candidate.kind === "bundle") &&
+    (candidate.kind === "product" || candidate.kind === "bundle" || candidate.kind === "juice") &&
     typeof candidate.label === "string" &&
-    typeof candidate.unitPrice === "number" &&
-    Number.isFinite(candidate.unitPrice) &&
+    (candidate.kind === "juice"
+      ? (candidate.unitPrice === null ||
+          (typeof candidate.unitPrice === "number" &&
+            Number.isFinite(candidate.unitPrice) &&
+            candidate.unitPrice > 0)) &&
+        typeof candidate.productId === "string"
+      : typeof candidate.unitPrice === "number" && Number.isFinite(candidate.unitPrice)) &&
     typeof candidate.quantity === "number" &&
     Number.isFinite(candidate.quantity)
   );

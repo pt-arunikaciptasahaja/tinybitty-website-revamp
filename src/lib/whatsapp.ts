@@ -2,8 +2,8 @@ export type WhatsAppLineItem = {
   label: string;
   detail?: string;
   quantity: number;
-  unitPrice: number;
-  subtotal: number;
+  unitPrice: number | null;
+  subtotal: number | null;
 };
 
 export type WhatsAppCheckoutDetails = {
@@ -19,7 +19,7 @@ export type WhatsAppMessageInput = {
   customer: WhatsAppCheckoutDetails;
   items: WhatsAppLineItem[];
   subtotal: number;
-  deliveryFee: number;
+  deliveryFee: number | null;
 };
 
 function formatRupiah(amount: number): string {
@@ -36,11 +36,13 @@ function formatCustomerField(value: string | undefined): string {
 }
 
 export function buildWhatsAppMessage(input: WhatsAppMessageInput): string {
-  const total = input.subtotal + input.deliveryFee;
+  const needsQuote =
+    input.items.some((item) => item.unitPrice === null) || input.deliveryFee === null;
+  const total = input.subtotal + (input.deliveryFee ?? 0);
   const itemLines = input.items
     .map(
       (item, index) =>
-        `${index + 1}. ${item.label}${item.detail ? ` - ${item.detail}` : ""} - Qty ${item.quantity} - ${formatRupiah(item.unitPrice)} each - ${formatRupiah(item.subtotal)}`,
+        `${index + 1}. ${item.label}${item.detail ? ` - ${item.detail}` : ""} - Qty ${item.quantity} - ${item.unitPrice === null || item.subtotal === null ? "Ask for price" : `${formatRupiah(item.unitPrice)} each - ${formatRupiah(item.subtotal)}`}`,
     )
     .join("\n");
 
@@ -57,9 +59,17 @@ export function buildWhatsAppMessage(input: WhatsAppMessageInput): string {
     "Pesanan:",
     itemLines,
     "",
-    `Subtotal: ${formatRupiah(input.subtotal)}`,
-    `Delivery service: Flat delivery - ${formatRupiah(input.deliveryFee)}`,
-    `Total pembayaran: ${formatRupiah(total)}`,
+    input.items.some((item) => item.unitPrice === null)
+      ? input.items.some((item) => item.unitPrice !== null)
+        ? `Known-price subtotal (excludes unpriced items): ${formatRupiah(input.subtotal)}`
+        : "Subtotal: Awaiting quotation"
+      : `Subtotal: ${formatRupiah(input.subtotal)}`,
+    input.deliveryFee === null
+      ? "Delivery: Confirm availability and fee via WhatsApp"
+      : `Delivery service: Flat delivery - ${formatRupiah(input.deliveryFee)}`,
+    needsQuote
+      ? "Total pembayaran: Confirm through WhatsApp after quotation"
+      : `Total pembayaran: ${formatRupiah(total)}`,
     "",
     "Pembayaran via bank transfer:",
     "Luckyta Aryandini",
